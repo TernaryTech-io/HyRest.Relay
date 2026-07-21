@@ -1,0 +1,26 @@
+services:
+  hyrest-relay:
+    image: git.ternarytech.io/jacob.dahlke/hyrest.relay:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - HYREST_USERNAME=${HYREST_USERNAME}
+      - HYREST_PASSWORD=${HYREST_PASSWORD}
+      - HYREST_CLIENTID=${HYREST_CLIENTID}
+      - HYREST_CLIENTSECRET=${HYREST_CLIENTSECRET}
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - hyrest-network
+
+networks:
+  hyrest-network:
+    driver: bridge
