@@ -1,12 +1,4 @@
-﻿using DotNetEnv;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Ternary.Extensions.Logging;
-using Ternary.HyRest;
-using Ternary.HyRest.DependencyInjection;
-using Ternary.HyRest.Identity.Credentials;
-
-namespace HyRest.Relay;
+﻿namespace HyRest.Relay;
 
 public static class AppConfiguration
 {
@@ -48,10 +40,32 @@ public static class AppConfiguration
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddProblemDetails();
-        builder.Services.AddAuthentication("HylandAuth")
-            .AddScheme<HylandAuthOptions,HylandAuthenticationHandler>("HylandAuth", options =>
-            {
-                
+        //builder.Services.AddAuthentication("HylandAuth")
+        //    .AddScheme<HylandAuthOptions,HylandAuthenticationHandler>("HylandAuth", options =>
+        //    {
+
+        //    });
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+        })
+        .AddCookie()
+            .AddOpenIdConnect("oidc", options =>
+            {                
+                options.Authority = "https://onbase.ternarytech.io/auth";
+                options.AuthenticationMethod = OpenIdConnectRedirectBehavior.FormPost;
+                options.ClientId = "e2507cb2-93f8-4ee5-a6ff-62a1a924f5ac";
+                options.ClientSecret = "CJQ1UKCkeAIQXAvshG3rau3IfBMB";
+                options.ResponseType = "code"; // Authorization Code flow
+                options.SaveTokens = true; // Saves access/refresh tokens in the cookie
+                options.Scope.Add("openid");
+                options.Scope.Add("evolution");
+                options.Scope.Add("onbaseapi"); // Specific API scope
+
+                // The redirect URL must match the one registered with the Identity Provider
+                options.CallbackPath = "/authorize";
             });
         builder.Services.AddAuthorization();           
 

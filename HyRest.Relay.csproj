@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
@@ -19,7 +21,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
     <PackageReference Include="Ternary.Extensions.Logging" Version="1.0.7" />
-    <PackageReference Include="Ternary.HyRest" Version="1.1.71926" />
+    <PackageReference Include="Ternary.HyRest" Version="1.4.71926" />
     <PackageReference Include="Ternary.HyRest.DependencyInjection" Version="1.1.71926" />
   </ItemGroup>
 
