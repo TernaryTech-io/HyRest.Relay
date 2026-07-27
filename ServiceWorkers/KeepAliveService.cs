@@ -5,9 +5,9 @@ namespace HyRest.Relay;
 public class KeepAliveService : BackgroundService
 {
     private readonly ILogger<KeepAliveService> _logger;
-    private readonly HylandApp _app;
+    private readonly OnBaseApp _app;
     private readonly CancellationTokenSource _cts;
-    public KeepAliveService(ILogger<KeepAliveService> logger, HylandApp app, CancellationTokenSource cts)
+    public KeepAliveService(ILogger<KeepAliveService> logger, OnBaseApp app, CancellationTokenSource cts)
     {
         _logger = logger;
         _app = app;

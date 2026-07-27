@@ -21,8 +21,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
     <PackageReference Include="Ternary.Extensions.Logging" Version="1.0.7" />
-    <PackageReference Include="Ternary.HyRest" Version="1.4.71926" />
-    <PackageReference Include="Ternary.HyRest.DependencyInjection" Version="1.1.71926" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\HyRest\Ternary.HyRest.DependencyInjection\Ternary.HyRest.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\HyRest\Ternary.HyRest\Ternary.HyRest.csproj" />
   </ItemGroup>
 
 </Project>

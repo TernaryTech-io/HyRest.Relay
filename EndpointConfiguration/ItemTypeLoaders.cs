@@ -1,6 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 using Ternary.HyRest;
+
 
 namespace HyRest.Relay;
 
@@ -8,116 +14,137 @@ public static class EndPointLoaders
 {
     public static WebApplication AddEndpoints(this WebApplication web)
     {        
-        var app = web.Services.GetService<HylandApp>();
+        var app = web.Services.GetService<IOnBaseAppBuilder>();
+        web.MapAuthEndpoint();
         web.MapItemTypeEndPoints(app);
-        web.MapDocumentEndPoints(app);
-        web.MapArchiveEndpoints(app);
-        web.MapQueryEndpoints(app);
+        //web.MapDocumentEndPoints(app);
+        //web.MapArchiveEndpoints(app);
+        //web.MapQueryEndpoints(app);
         return web;
     }
 
-    internal static WebApplication MapItemTypeEndPoints(this WebApplication web, HylandApp app)
+    internal static WebApplication MapItemTypeEndPoints(this WebApplication web, IOnBaseAppBuilder appBuilder)
     {
-        web.MapGet("/documenttypes", [Authorize] ([FromQuery] string? query) =>
+        web.MapGet("/api/documenttypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.DocumentTypes.ToArray();
             else
                 return [app.Core.DocumentTypes[query]];
         }).WithName("GetDocumentTypes");
-        web.MapGet("/documenttypes/{id}", [Authorize] ([FromRoute] string id) =>
+        web.MapGet("/api/documenttypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
+            var app = await appBuilder.GetApp(context);
             return app.Core.DocumentTypes[id];
         }).WithName("GetDocumentTypeById");
-        web.MapGet("/documenttypes/{id}/keywordtypes", [Authorize] ([FromRoute] string id) =>
+        web.MapGet("/api/documenttypes/{id}/keywordtypes", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
+            var app = await appBuilder.GetApp(context);
             return app.Core.DocumentTypes[id]?.KeywordTypeCollection;
         }).WithName("GetKeywordTypesByDocumentTypeId");
-        web.MapGet("/documenttypegroups", [Authorize] ([FromQuery] string? query) => {         
+        web.MapGet("/api/documenttypegroups", [Authorize] async ([FromQuery] string? query, HttpContext context) => {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.DocumentTypeGroups.ToArray();
             else
                 return [app.Core.DocumentTypeGroups[query]];
         }).WithName("GetDocumentTypeGroups");
-        web.MapGet("/documenttypegroups/{id}", [Authorize] ([FromRoute] string id) => {            
+        web.MapGet("/api/documenttypegroups/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) => {
+            var app = await appBuilder.GetApp(context);
             return app.Core.DocumentTypeGroups[id];         
         }).WithName("GetDocumentTypeGroupById");
-        web.MapGet("/keywordtypes", [Authorize]([FromQuery] string? query) =>
-        {            
+        web.MapGet("/api/keywordtypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.KeywordTypes.ToArray();
             else
                 return [app.Core.KeywordTypes[query]];
         }).WithName("GetKeywordTypes");
-        web.MapGet("/keywordtypes/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/keywordtypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.KeywordTypes[id];
         }).WithName("GetKeywordTypeById");
-        web.MapGet("/keywordtypegroups", [Authorize] ([FromQuery] string? query) =>
-        {            
+        web.MapGet("/api/keywordtypegroups", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.KeywordTypeGroups.ToArray();
             else
                 return [app.Core.KeywordTypeGroups[query]];
         }).WithName("GetKeywordTypeGroups");
-        web.MapGet("/keywordtypegroups/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/keywordtypegroups/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.KeywordTypeGroups[id];
         }).WithName("GetKeywordTypeGroupById");
-        web.MapGet("/filetypes", [Authorize] ([FromQuery] string? query) =>
-        {            
+        web.MapGet("/api/filetypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.FileTypes.ToArray();
             else
                 return [app.Core.FileTypes[query]];
         }).WithName("GetFileTypes");
-        web.MapGet("/filetypes/bestguess", [Authorize] ([FromQuery] string extension) =>
-        {            
+        web.MapGet("/api/filetypes/bestguess", [Authorize] async ([FromQuery] string extension, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.FileTypes.BestGuess(extension);
         }).WithName("GetFileTypesBestGuess");
-        web.MapGet("/filetypes/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/filetypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.FileTypes[id];
         }).WithName("GetFileTypeById");
-        web.MapGet("/customqueries", [Authorize] ([FromQuery] string? query) =>
+        web.MapGet("/api/customqueries", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.CustomQueries.ToArray();
             else
                 return [app.Core.CustomQueries[query]];
         }).WithName("GetCustomQueries");
-        web.MapGet("/customqueries/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/customqueries/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.CustomQueries[id];
         }).WithName("GetCustomQueryById");
-        web.MapGet("/notetypes", [Authorize] ([FromQuery] string? query) =>
+        web.MapGet("/api/notetypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
+            var app = await appBuilder.GetApp(context);
             if (query == null)
                 return app.Core.NoteTypes.ToArray();
             else
                 return [app.Core.NoteTypes[query]];
         }).WithName("GetNoteTypes");
-        web.MapGet("/notetypes/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/notetypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             return app.Core.NoteTypes[id];
         }).WithName("GetNoteTypeById");
         return web;
     }
 
-    internal static WebApplication MapDocumentEndPoints(this WebApplication web, HylandApp app)
+    internal static WebApplication MapDocumentEndPoints(this WebApplication web, IOnBaseAppBuilder appBuilder)
     {
-        web.MapGet("/document/{id}", [Authorize] ([FromRoute] string id) =>
-        {            
+        web.MapGet("/api/document/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             var doc = app.Core.GetDocumentById(id);
             return doc;
         }).WithName("GetDocumentById");
-        web.MapGet("/document/{id}/keywords", [Authorize] ([FromRoute] string id) =>
-        {           
+        web.MapGet("/api/document/{id}/keywords", [Authorize] async ([FromRoute] string id, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             var doc = app.Core.GetDocumentById(id);
             return doc?.KeywordCollection;
         }).WithName("GetDocumentKeywords");
-        web.MapGet("/document/{id}/content", [Authorize] ([FromRoute] string id, [FromQuery] string? revision, [FromQuery] string? rendition, [FromHeader] string? accept) =>
-        {            
+        web.MapGet("/api/document/{id}/content", [Authorize] async ([FromRoute] string id, [FromQuery] string? revision, 
+            [FromQuery] string? rendition, [FromHeader] string? accept, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             var doc = app.Core.GetDocumentById(id);
             var content = doc?.GetContent(revisionId: revision ?? "latest", fileTypeId: rendition ?? "default", accept: accept ?? "*/*");
 
@@ -130,31 +157,33 @@ public static class EndPointLoaders
             else return null;
 
         }).WithName("GetDocumentContent");
-        web.MapGet("/document/{id}/notes", [Authorize] ([FromRoute] string id, [FromQuery] string? revision, [FromQuery] string? rendition, [FromHeader] string? accept) =>
-        {            
+        web.MapGet("/api/document/{id}/notes", [Authorize] async ([FromRoute] string id, [FromQuery] string? revision, 
+            [FromQuery] string? rendition, [FromHeader] string? accept, HttpContext context) =>
+        {
+            var app = await appBuilder.GetApp(context);
             var doc = app.Core.GetDocumentById(id);
             return doc?.Notes;
         }).WithName("GetDocumentNotes");
         return web;
     }
 
-    internal static WebApplication MapArchiveEndpoints(this WebApplication web, HylandApp app)
+    internal static WebApplication MapArchiveEndpoints(this WebApplication web, OnBaseApp app)
     {
-        web.MapGet("/documenttypes/{id}/archive", [Authorize] async ([FromRoute] string id) =>
+        web.MapGet("/api/documenttypes/{id}/archive", [Authorize] async ([FromRoute] string id) =>
         {
             return await DocumentArchiveHelpers.CreateUploadModel(app, id);
         }).WithName("GetDocumentTypeArchive");
 
-        web.MapPost("/document", [Authorize] async ([FromBody] DocumentUploadModel model) =>
+        web.MapPost("/api/document", [Authorize] async ([FromBody] DocumentUploadModel model) =>
         {
             return await DocumentArchiveHelpers.ArchiveDocument(app, model);
             
         }).WithName("ArchiveDocument");
-        web.MapGet("/document/{id}/update", [Authorize] async ([FromRoute] string id) =>
+        web.MapGet("/api/document/{id}/update", [Authorize] async ([FromRoute] string id) =>
         {
             return await DocumentArchiveHelpers.EditDocument(app, id);
         }).WithName("EditDocument");
-        web.MapPut("/document", [Authorize] async ([FromBody] DocumentUpdateModel model) =>
+        web.MapPut("/api/document", [Authorize] async ([FromBody] DocumentUpdateModel model) =>
         {
             return await DocumentArchiveHelpers.UpdateDocument(app, model);
         }).WithName("UpdateDocument");
@@ -162,15 +191,51 @@ public static class EndPointLoaders
         return web;
     }
 
-    internal static WebApplication MapQueryEndpoints(this WebApplication web, HylandApp app)
+    internal static WebApplication MapQueryEndpoints(this WebApplication web, OnBaseApp app)
     {
-        web.MapPost("/query", [Authorize] (DocumentQueryRequest request) =>
+        web.MapPost("/api/query", [Authorize] (DocumentQueryRequest request) =>
         {
             var query = DocumentQueryHelpers.ConstructQuery(app, request);
             return DocumentQueryHelpers.ExecuteQuery(app, query);
         }).WithName("ExecuteQuery");
-        
+
         return web;
     }
+    internal static WebApplication MapAuthEndpoint(this WebApplication web)
+    {
+        web.MapGet("/account/login", (string? returnUrl, HttpContext context) =>
+        {            
+            var redirectUrl = returnUrl;
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "/account/authorized",
+            };
+            return Results.Challenge(properties, new[] { "HylandIdS" });
+        });
 
+        web.MapGet("/account/logout", async (HttpContext ctx) =>
+        {
+            await ctx.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await ctx.SignOutAsync("HylandIdS",
+                new AuthenticationProperties { RedirectUri = "/" });
+        });
+
+        // Simple endpoint to confirm auth worked / inspect claims
+        web.MapGet("/account/authorized", [Authorize] (HttpContext ctx) =>
+        {     
+            if (ctx.User?.Identity?.IsAuthenticated != true)
+                return Results.Unauthorized();
+
+            var claims = ctx.User.Claims.Select(c => new { c.Type, c.Value });
+            return Results.Ok("Authentication Successful. You can close this window.");
+        }).RequireAuthorization();
+        web.MapGet("/account/unauthorized", (HttpContext ctx) =>
+        {
+            return Results.Ok("You have been logged out.");
+        });
+        return web;
+
+
+    }
 }
+
