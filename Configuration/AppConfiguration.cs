@@ -22,8 +22,7 @@ public static class AppConfiguration
         forwardedHeadersOptions.KnownProxies.Clear();
         app.UseForwardedHeaders(forwardedHeadersOptions);
         app.UseExceptionHandler();
-        app.UseAuthentication();
-        app.UseAuthorization();
+        app.UseHylandAuthentication("/account");
         app.AddEndpoints();
         //app.UseHttpsRedirection();
         if (app.Environment.IsDevelopment())
@@ -41,7 +40,7 @@ public static class AppConfiguration
             var hylandApp = app.Services.GetService<OnBaseApp>();
             if(hylandApp != null)
             {
-                if (hylandApp.IsAuthenticated && hylandApp.Session.IsActive)
+                if (hylandApp.Session.IsActive)
                     await hylandApp.Session.DisconnectAsync();
             }
 
@@ -61,20 +60,44 @@ public static class AppConfiguration
         var clientId = Environment.GetEnvironmentVariable("HYREST_CLIENTID");
         var clientsecret = Environment.GetEnvironmentVariable("HYREST_CLIENTSECRET");
 
+        //builder.Services.AddAuthentication(options =>
+        //{
+        //    options.DefaultScheme = "cookie";
+        //    options.DefaultChallengeScheme = "oidc";
+        //})
+        //.AddCookie("cookie", options =>
+        //{
+        //    options.Cookie.Name = "web";
+
+        //    // automatically revoke refresh token at signout time
+        //    options.Events.OnSigningOut = async e => { await e.HttpContext.RevokeRefreshTokenAsync(); };
+        //})
+        //.AddOpenIdConnect("oidc", authOptions =>
+        //{
+        //    authOptions.Authority = idsBase;
+        //    authOptions.ClientId = clientId;
+        //    authOptions.ClientSecret = clientsecret;
+        //    authOptions.CallbackPath = "/authenticate";
+        //    authOptions.ResponseType = "code";
+        //    authOptions.SignedOutCallbackPath = "/signout-callback-oidc";
+        //    authOptions.SignedOutRedirectUri = "/";
+        //    authOptions.GetClaimsFromUserInfoEndpoint = true;
+        //    authOptions.ResponseType = "code";
+        //    authOptions.SaveTokens = true;
+        //    authOptions.Scope.Clear();
+        //    authOptions.Scope.Add("openid");
+        //    authOptions.Scope.Add("profile");
+        //    authOptions.Scope.Add("profile.onbase");
+        //    authOptions.Scope.Add("evolution");
+        //});
+
         builder.AddExternalAuthHylandApp(clientOptions =>
-        {            
+        {
             clientOptions.ApiBaseUrl = apiBase;
             clientOptions.IdsBaseUrl = idsBase;
             //optional, defaults are provided
             clientOptions.UseQueryMetering = hylandAppSettings.GetValue<bool>("UseQueryMetering"); //default is false
-            clientOptions.DefaultLanguage = hylandAppSettings.GetValue<string>("DefaultLanguage") ?? string.Empty; ; //defaults to en-US
-                                                                                                                     //optional, a default will be created if not supplied, these are the default options
-            clientOptions.ClientHandler = new HttpClientHandler
-            {
-                AllowAutoRedirect = true, //This will be overridden to true if not set
-                UseCookies = true, //This will be overridden to true if not set
-                CookieContainer = new System.Net.CookieContainer() //If cookie container is not set, one will be created.
-            };
+            clientOptions.DefaultLanguage = hylandAppSettings.GetValue<string>("DefaultLanguage") ?? string.Empty; ; //defaults to en-US            
         },
         authOptions =>
         {
@@ -93,9 +116,7 @@ public static class AppConfiguration
             authOptions.Scope.Add("profile");
             authOptions.Scope.Add("profile.onbase");
             authOptions.Scope.Add("evolution");
-        });        
-
-        builder.Services.AddAuthorization();           
+        });                  
 
         builder.Logging.AddColorConsole()
             .SetMinimumLevel(LogLevel.Information);
@@ -121,10 +142,14 @@ public static class AppConfiguration
     internal static IAuthenticationCredentials LoadCredentials()
     {
         Env.Load();
-        var username = Environment.GetEnvironmentVariable("HYREST_USERNAME");
-        var password = Environment.GetEnvironmentVariable("HYREST_PASSWORD");
-        var clientId = Environment.GetEnvironmentVariable("HYREST_CLIENTID");
-        var clientsecret = Environment.GetEnvironmentVariable("HYREST_CLIENTSECRET");
+        var username = Environment.GetEnvironmentVariable("HYREST_USERNAME") 
+            ?? throw new Exception("The username is not present in the environmental variables.");
+        var password = Environment.GetEnvironmentVariable("HYREST_PASSWORD")
+            ?? throw new Exception("The password is not present in the environmental variables.");
+        var clientId = Environment.GetEnvironmentVariable("HYREST_CLIENTID")
+            ?? throw new Exception("The client id is not present in the environmental variables.");
+        var clientsecret = Environment.GetEnvironmentVariable("HYREST_CLIENTSECRET")
+            ?? throw new Exception("The client secret is not present in the environmental variables.");
         return AuthenticationCredentials
         .CreateUserCredentials(
             username,
