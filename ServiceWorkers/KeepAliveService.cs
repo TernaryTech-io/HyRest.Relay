@@ -1,4 +1,4 @@
-﻿using Ternary.HyRest;
+﻿using HyRest;
 
 namespace HyRest.Relay;
 

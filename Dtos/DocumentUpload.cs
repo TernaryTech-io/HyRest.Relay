@@ -1,6 +1,6 @@
 ﻿
 using System.Security;
-using Ternary.HyRest.DocumentManagement;
+using HyRest.DocumentManagement;
 
 namespace HyRest.Relay;
 

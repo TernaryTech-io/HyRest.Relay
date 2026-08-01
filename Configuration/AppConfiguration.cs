@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ternary.Extensions.Logging;
-using Ternary.HyRest;
-using Ternary.HyRest.DependencyInjection;
-using Ternary.HyRest.Identity.Credentials;
+using HyRest;
+using HyRest.DependencyInjection;
+using HyRest.Identity.Credentials;
 
 namespace HyRest.Relay;
 
