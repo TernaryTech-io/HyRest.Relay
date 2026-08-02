@@ -59,39 +59,9 @@ public static class AppConfiguration
         var idsBase = hylandAppSettings.GetValue<string>("IdSUri") ?? string.Empty;
         var clientId = Environment.GetEnvironmentVariable("HYREST_CLIENTID");
         var clientsecret = Environment.GetEnvironmentVariable("HYREST_CLIENTSECRET");
+               
 
-        //builder.Services.AddAuthentication(options =>
-        //{
-        //    options.DefaultScheme = "cookie";
-        //    options.DefaultChallengeScheme = "oidc";
-        //})
-        //.AddCookie("cookie", options =>
-        //{
-        //    options.Cookie.Name = "web";
-
-        //    // automatically revoke refresh token at signout time
-        //    options.Events.OnSigningOut = async e => { await e.HttpContext.RevokeRefreshTokenAsync(); };
-        //})
-        //.AddOpenIdConnect("oidc", authOptions =>
-        //{
-        //    authOptions.Authority = idsBase;
-        //    authOptions.ClientId = clientId;
-        //    authOptions.ClientSecret = clientsecret;
-        //    authOptions.CallbackPath = "/authenticate";
-        //    authOptions.ResponseType = "code";
-        //    authOptions.SignedOutCallbackPath = "/signout-callback-oidc";
-        //    authOptions.SignedOutRedirectUri = "/";
-        //    authOptions.GetClaimsFromUserInfoEndpoint = true;
-        //    authOptions.ResponseType = "code";
-        //    authOptions.SaveTokens = true;
-        //    authOptions.Scope.Clear();
-        //    authOptions.Scope.Add("openid");
-        //    authOptions.Scope.Add("profile");
-        //    authOptions.Scope.Add("profile.onbase");
-        //    authOptions.Scope.Add("evolution");
-        //});
-
-        builder.AddExternalAuthHylandApp(clientOptions =>
+        builder.AddOpenIdHylandApp(clientOptions =>
         {
             clientOptions.ApiBaseUrl = apiBase;
             clientOptions.IdsBaseUrl = idsBase;
@@ -135,7 +105,7 @@ public static class AppConfiguration
         Console.CancelKeyPress += ConsoleCancelHandeler;
         AppDomain.CurrentDomain.ProcessExit += ProcessExitHandler;
         AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
-        _app = builder.Build();
+        _app = builder.Build();        
         return _app;
     }    
 
