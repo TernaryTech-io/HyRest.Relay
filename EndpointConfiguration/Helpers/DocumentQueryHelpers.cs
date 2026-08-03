@@ -1,11 +1,11 @@
-﻿using Ternary.HyRest;
-using Ternary.HyRest.DocumentManagement;
+﻿using HyRest;
+using HyRest.DocumentManagement;
 
 namespace HyRest.Relay;
 
 public static class DocumentQueryHelpers
 {
-    public static DocumentQueryResponse ExecuteQuery(HylandApp app, DocumentQuery query)
+    public static DocumentQueryResponse ExecuteQuery(OnBaseApp app, DocumentQuery query)
     {
         var response = new DocumentQueryResponse();
         var results = query.GetResults();
@@ -20,7 +20,7 @@ public static class DocumentQueryHelpers
         }
         return response;
     }
-    public static DocumentQuery ConstructQuery(HylandApp app, DocumentQueryRequest request)
+    public static DocumentQuery ConstructQuery(OnBaseApp app, DocumentQueryRequest request)
     {
         if (request.Type == QueryType.CustomQuery)
             return ConstructCustomQuery(app, request);
@@ -28,7 +28,7 @@ public static class DocumentQueryHelpers
             return ConstructDocumentTypeQuery(app, request);
         else return ConstructDocumentTypeGroupQuery(app, request);
     }
-    private static DocumentQuery ConstructCustomQuery(HylandApp app, DocumentQueryRequest request)
+    private static DocumentQuery ConstructCustomQuery(OnBaseApp app, DocumentQueryRequest request)
     {
         var cq = app.Core.CustomQueries[request.Item];
         var builder = app.Core.CreateDocumentQueryBuilder<CustomQueryBuilder>()
@@ -45,7 +45,7 @@ public static class DocumentQueryHelpers
         }
         return builder.CreateQuery();
     }
-    private static DocumentQuery ConstructDocumentTypeQuery(HylandApp app, DocumentQueryRequest request)
+    private static DocumentQuery ConstructDocumentTypeQuery(OnBaseApp app, DocumentQueryRequest request)
     {
         var dt = app.Core.DocumentTypes[request.Item];
         var builder = app.Core.CreateDocumentQueryBuilder<DocumentTypeQueryBuilder>()
@@ -62,7 +62,7 @@ public static class DocumentQueryHelpers
         }
         return builder.CreateQuery();
     }
-    private static DocumentQuery ConstructDocumentTypeGroupQuery(HylandApp app, DocumentQueryRequest request)
+    private static DocumentQuery ConstructDocumentTypeGroupQuery(OnBaseApp app, DocumentQueryRequest request)
     {
         var dt = app.Core.DocumentTypeGroups[request.Item];
         var builder = app.Core.CreateDocumentQueryBuilder<DocumentTypeGroupQueryBuilder>()

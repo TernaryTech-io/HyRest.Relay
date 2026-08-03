@@ -1,11 +1,11 @@
-﻿using Ternary.HyRest;
-using Ternary.HyRest.DocumentManagement;
+﻿using HyRest;
+using HyRest.DocumentManagement;
 
 namespace HyRest.Relay;
 
 public static class DocumentArchiveHelpers
 {
-    public static async Task<DocumentUpdateResponse> UpdateDocument(HylandApp app, DocumentUpdateModel model)
+    public static async Task<DocumentUpdateResponse> UpdateDocument(OnBaseApp app, DocumentUpdateModel model)
     {
         var doc = await app.Core.GetDocumentByIdAsync(model.DocumentId);
         if (doc == null)
@@ -65,7 +65,7 @@ public static class DocumentArchiveHelpers
             KeywordExceptions = exceptions.Select(e => e.Message).ToList()
         };
     }
-    public static async Task<DocumentUpdateModel?> EditDocument(HylandApp app, string id)
+    public static async Task<DocumentUpdateModel?> EditDocument(OnBaseApp app, string id)
     {
         var doc = await app.Core.GetDocumentByIdAsync(id);
         if (doc == null)
@@ -112,7 +112,7 @@ public static class DocumentArchiveHelpers
         }
         return update;
     }
-    public static async Task<DocumentUploadResponse> ArchiveDocument(HylandApp app, DocumentUploadModel model)
+    public static async Task<DocumentUploadResponse> ArchiveDocument(OnBaseApp app, DocumentUploadModel model)
     {
         var docType = app.Core.DocumentTypes.Find(model.DocumentType);
         if (docType == null)
@@ -178,7 +178,7 @@ public static class DocumentArchiveHelpers
             KeywordExceptions = exceptions.Select(e => e.Message).ToList()
         };
     }    
-    public static async Task<DocumentUploadModel?> CreateUploadModel(HylandApp app, string id)
+    public static async Task<DocumentUploadModel?> CreateUploadModel(OnBaseApp app, string id)
     {
         var doctType = app.Core.DocumentTypes[id];
         if (doctType == null)
