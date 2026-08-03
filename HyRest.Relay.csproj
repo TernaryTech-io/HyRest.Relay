@@ -26,6 +26,8 @@
     <PackageReference Include="DotNetEnv" />
     <PackageReference Include="Duende.AccessTokenManagement" />
     <PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" />
+    <PackageReference Include="HyRest" />
+    <PackageReference Include="HyRest.DependencyInjection" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
@@ -34,11 +36,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     <PackageReference Include="Ternary.Extensions.Logging" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\HyRest.DependencyInjection\HyRest.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\src\HyRest\HyRest.csproj" />
   </ItemGroup>
 
 </Project>
