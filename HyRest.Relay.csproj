@@ -9,6 +9,7 @@
     <DockerfileContext>.</DockerfileContext>
     <ApplicationIcon>Ternary-teal.ico</ApplicationIcon>
     <PackageIcon>Ternary-teal.png</PackageIcon>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,19 +24,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetEnv" />
-    <PackageReference Include="Duende.AccessTokenManagement" />
-    <PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" />
-    <PackageReference Include="HyRest" />
-    <PackageReference Include="HyRest.DependencyInjection" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.OpenApi" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
-    <PackageReference Include="Ternary.Extensions.Logging" />
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="HyRest" Version="10.0.4" />
+    <PackageReference Include="HyRest.DependencyInjection" Version="10.0.4" />
+    <PackageReference Include="Ternary.Extensions.Logging" Version="1.0.7" />
+    <PackageVersion Include="Duende.AccessTokenManagement" Version="4.2.0" />
+    <PackageVersion Include="Duende.AccessTokenManagement.OpenIdConnect" Version="4.2.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+
   </ItemGroup>
+
+
 
 </Project>

@@ -57,7 +57,7 @@ public static class DocumentArchiveHelpers
                 }
             }
         }
-        await doc.UpdateKeywords();
+        await doc.UpdateKeywordsAsync();
         doc = await app.Core.GetDocumentByIdAsync(model.DocumentId);
         return new DocumentUpdateResponse
         {
