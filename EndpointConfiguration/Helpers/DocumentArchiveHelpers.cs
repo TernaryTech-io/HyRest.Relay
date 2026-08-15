@@ -1,5 +1,5 @@
 ﻿using HyRest;
-using HyRest.DocumentManagement;
+using HyRest.OnBase.Core;
 
 namespace HyRest.Relay;
 
@@ -170,7 +170,7 @@ public static class DocumentArchiveHelpers
                 }
             }
         }
-        var document = await props.ArchiveDocument();
+        var document = await props.ArchiveDocumentAsync();
 
         return new DocumentUploadResponse
         {
@@ -184,7 +184,7 @@ public static class DocumentArchiveHelpers
         if (doctType == null)
             return null;
 
-        var defaultKeys = await doctType.GetDefaultKeywords();
+        var defaultKeys = await doctType.GetDefaultKeywordsAsync();
         var archive = new DocumentUploadModel
         {
             DocumentType = doctType.Name,

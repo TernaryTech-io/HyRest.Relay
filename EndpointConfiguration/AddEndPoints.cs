@@ -24,7 +24,7 @@ public static class EndPointLoaders
     {
         web.MapGet("/api/documenttypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();           
+            var app = web.GetOnBaseScopedApp();           
             if (query == null)
                 return app.Core.DocumentTypes.ToArray();
             else
@@ -32,28 +32,34 @@ public static class EndPointLoaders
         }).WithName("GetDocumentTypes");
         web.MapGet("/api/documenttypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.DocumentTypes[id];
         }).WithName("GetDocumentTypeById");
         web.MapGet("/api/documenttypes/{id}/keywordtypes", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.DocumentTypes[id]?.KeywordTypeCollection;
         }).WithName("GetKeywordTypesByDocumentTypeId");
         web.MapGet("/api/documenttypegroups", [Authorize] async ([FromQuery] string? query, HttpContext context) => {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             if (query == null)
                 return app.Core.DocumentTypeGroups.ToArray();
             else
                 return [app.Core.DocumentTypeGroups[query]];
         }).WithName("GetDocumentTypeGroups");
         web.MapGet("/api/documenttypegroups/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) => {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.DocumentTypeGroups[id];         
         }).WithName("GetDocumentTypeGroupById");
+
+        web.MapGet("/api/documenttypegroups/{id}/documenttypes", [Authorize] async ([FromRoute] string id, HttpContext context) => {
+            var app = web.GetOnBaseScopedApp();
+            return app.Core.DocumentTypeGroups[id].DocumentTypes;
+        }).WithName("GetdocumentsForDocumentTypeGroupById");
+
         web.MapGet("/api/keywordtypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             if (query == null)
                 return app.Core.KeywordTypes.ToArray();
             else
@@ -61,12 +67,12 @@ public static class EndPointLoaders
         }).WithName("GetKeywordTypes");
         web.MapGet("/api/keywordtypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.KeywordTypes[id];
         }).WithName("GetKeywordTypeById");
         web.MapGet("/api/keywordtypegroups", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             if (query == null)
                 return app.Core.KeywordTypeGroups.ToArray();
             else
@@ -74,12 +80,12 @@ public static class EndPointLoaders
         }).WithName("GetKeywordTypeGroups");
         web.MapGet("/api/keywordtypegroups/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.KeywordTypeGroups[id];
         }).WithName("GetKeywordTypeGroupById");
         web.MapGet("/api/filetypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {          
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             if (query == null)
                 return app.Core.FileTypes.ToArray();
             else
@@ -87,17 +93,17 @@ public static class EndPointLoaders
         }).WithName("GetFileTypes");
         web.MapGet("/api/filetypes/bestguess", [Authorize] async ([FromQuery] string extension, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();
             return app.Core.FileTypes.BestGuess(extension);
         }).WithName("GetFileTypesBestGuess");
         web.MapGet("/api/filetypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return app.Core.FileTypes[id];
         }).WithName("GetFileTypeById");
         web.MapGet("/api/customqueries", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             if (query == null)
                 return app.Core.CustomQueries.ToArray();
             else
@@ -105,12 +111,12 @@ public static class EndPointLoaders
         }).WithName("GetCustomQueries");
         web.MapGet("/api/customqueries/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return app.Core.CustomQueries[id];
-        }).WithName("GetCustomQueryById");
+        }).WithName("GetApplicationById");
         web.MapGet("/api/notetypes", [Authorize] async ([FromQuery] string? query, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             if (query == null)
                 return app.Core.NoteTypes.ToArray();
             else
@@ -118,7 +124,7 @@ public static class EndPointLoaders
         }).WithName("GetNoteTypes");
         web.MapGet("/api/notetypes/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return app.Core.NoteTypes[id];
         }).WithName("GetNoteTypeById");
         return web;
@@ -128,20 +134,20 @@ public static class EndPointLoaders
     {
         web.MapGet("/api/document/{id}", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             var doc = app.Core.GetDocumentById(id);
             return doc;
         }).WithName("GetDocumentById");
         web.MapGet("/api/document/{id}/keywords", [Authorize] async ([FromRoute] string id, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             var doc = app.Core.GetDocumentById(id);
             return doc?.KeywordCollection;
         }).WithName("GetDocumentKeywords");
         web.MapGet("/api/document/{id}/content", [Authorize] async ([FromRoute] string id, [FromQuery] string? revision, 
             [FromQuery] string? rendition, [FromHeader] string? accept, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             var doc = app.Core.GetDocumentById(id);
             var content = doc?.GetContent(revisionId: revision ?? "latest", fileTypeId: rendition ?? "default", accept: accept ?? "*/*");
 
@@ -157,9 +163,9 @@ public static class EndPointLoaders
         web.MapGet("/api/document/{id}/notes", [Authorize] async ([FromRoute] string id, [FromQuery] string? revision, 
             [FromQuery] string? rendition, [FromHeader] string? accept, HttpContext context) =>
         {
-            var app = web.GetOnBaseApp(); 
+            var app = web.GetOnBaseScopedApp();    
             var doc = app.Core.GetDocumentById(id);
-            return doc?.Notes;
+            return doc?.GetNotesForRevision();
         }).WithName("GetDocumentNotes");
         return web;
     }
@@ -168,24 +174,24 @@ public static class EndPointLoaders
     {
         web.MapGet("/api/documenttypes/{id}/archive", [Authorize] async ([FromRoute] string id) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return await DocumentArchiveHelpers.CreateUploadModel(app, id);
         }).WithName("GetDocumentTypeArchive");
 
         web.MapPost("/api/document", [Authorize] async ([FromBody] DocumentUploadModel model) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return await DocumentArchiveHelpers.ArchiveDocument(app, model);
             
         }).WithName("ArchiveDocument");
         web.MapGet("/api/document/{id}/update", [Authorize] async ([FromRoute] string id) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return await DocumentArchiveHelpers.EditDocument(app, id);
         }).WithName("EditDocument");
         web.MapPut("/api/document", [Authorize] async ([FromBody] DocumentUpdateModel model) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             return await DocumentArchiveHelpers.UpdateDocument(app, model);
         }).WithName("UpdateDocument");
 
@@ -197,7 +203,7 @@ public static class EndPointLoaders
         
         web.MapPost("/api/query", [Authorize] (DocumentQueryRequest request) =>
         {
-            var app = web.GetOnBaseApp();
+            var app = web.GetOnBaseScopedApp();   
             var query = DocumentQueryHelpers.ConstructQuery(app, request);
             return DocumentQueryHelpers.ExecuteQuery(app, query);
         }).WithName("ExecuteQuery");
