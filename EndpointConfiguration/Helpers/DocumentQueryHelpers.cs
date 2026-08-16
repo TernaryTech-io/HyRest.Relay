@@ -1,5 +1,5 @@
 ﻿using HyRest;
-using HyRest.DocumentManagement;
+using HyRest.OnBase.Core;
 
 namespace HyRest.Relay;
 
@@ -23,12 +23,12 @@ public static class DocumentQueryHelpers
     public static DocumentQuery ConstructQuery(OnBaseApp app, DocumentQueryRequest request)
     {
         if (request.Type == QueryType.CustomQuery)
-            return ConstructCustomQuery(app, request);
+            return ConstructApplication(app, request);
         else if (request.Type == QueryType.DocumentType)
             return ConstructDocumentTypeQuery(app, request);
         else return ConstructDocumentTypeGroupQuery(app, request);
     }
-    private static DocumentQuery ConstructCustomQuery(OnBaseApp app, DocumentQueryRequest request)
+    private static DocumentQuery ConstructApplication(OnBaseApp app, DocumentQueryRequest request)
     {
         var cq = app.Core.CustomQueries[request.Item];
         var builder = app.Core.CreateDocumentQueryBuilder<CustomQueryBuilder>()

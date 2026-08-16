@@ -1,11 +1,10 @@
 ﻿using DotNetEnv;
+using HyRest.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ternary.Extensions.Logging;
-using HyRest;
-using HyRest.DependencyInjection;
-using HyRest.Identity.Credentials;
 
 namespace HyRest.Relay;
 
@@ -22,29 +21,8 @@ public static class AppConfiguration
         forwardedHeadersOptions.KnownProxies.Clear();
         app.UseForwardedHeaders(forwardedHeadersOptions);
         app.UseExceptionHandler();
-        app.UseHylandAuthentication("/account");
+        app.UseHylandAuthentication();
         app.AddEndpoints();
-        //app.UseHttpsRedirection();
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            app.MapSwagger();
-        }
-
-        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-
-        lifetime.ApplicationStopping.Register(async () =>
-        {
-            TokenSource.Cancel();
-            var hylandApp = app.Services.GetService<OnBaseApp>();
-            if(hylandApp != null)
-            {
-                if (hylandApp.Session.IsActive)
-                    await hylandApp.Session.DisconnectAsync();
-            }
-
-        });
         app.Run();
 
         return app;
@@ -61,34 +39,32 @@ public static class AppConfiguration
         var clientsecret = Environment.GetEnvironmentVariable("HYREST_CLIENTSECRET");
                
 
-        builder.AddOpenIdHylandApp(clientOptions =>
+        builder.AddOpenIdHylandApp<OnBaseScopedApp>(credentials =>
+        {
+            credentials.ClientId = clientId;
+            credentials.ClientSecret = clientsecret;
+            //These Represent the default
+            credentials.CallbackPath = "/authenticate";
+            credentials.SignedOutCallbackPath = "/signout-callback-oidc";
+            credentials.SignedOutRedirectUri = "/";
+            //Not Required unless your scope differs from below:
+            //credentials.ClearScope();
+            //credentials.AddScope("openid");
+            //credentials.AddScope("profile");
+            //credentials.AddScope("profile.onbase");
+            //credentials.AddScope("evolution");
+        },
+        clientOptions =>
         {
             clientOptions.ApiBaseUrl = apiBase;
             clientOptions.IdsBaseUrl = idsBase;
             //optional, defaults are provided
             clientOptions.UseQueryMetering = hylandAppSettings.GetValue<bool>("UseQueryMetering"); //default is false
-            clientOptions.DefaultLanguage = hylandAppSettings.GetValue<string>("DefaultLanguage") ?? string.Empty; ; //defaults to en-US            
-        },
-        authOptions =>
-        {
-            authOptions.Authority = idsBase;
-            authOptions.ClientId = clientId;
-            authOptions.ClientSecret = clientsecret;
-            authOptions.CallbackPath = "/authenticate";
-            authOptions.ResponseType = "code";
-            authOptions.SignedOutCallbackPath = "/signout-callback-oidc";
-            authOptions.SignedOutRedirectUri = "/";
-            authOptions.GetClaimsFromUserInfoEndpoint = true;
-            authOptions.ResponseType = "code";
-            authOptions.SaveTokens = true;
-            authOptions.Scope.Clear();
-            authOptions.Scope.Add("openid");
-            authOptions.Scope.Add("profile");
-            authOptions.Scope.Add("profile.onbase");
-            authOptions.Scope.Add("evolution");
+            clientOptions.DefaultLanguage = hylandAppSettings.GetValue<string>("DefaultLanguage") ?? string.Empty; ; //defaults to en-US
+            clientOptions.RequestTimeOut = 120;
         });                  
 
-        builder.Logging.AddColorConsole()
+        builder.Logging.AddConsole()
             .SetMinimumLevel(LogLevel.Information);
 
         builder.Services.ConfigureHttpJsonOptions(options =>
@@ -101,7 +77,6 @@ public static class AppConfiguration
 
         builder.Services.AddSingleton(TokenSource);
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
         Console.CancelKeyPress += ConsoleCancelHandeler;
         AppDomain.CurrentDomain.ProcessExit += ProcessExitHandler;
         AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;

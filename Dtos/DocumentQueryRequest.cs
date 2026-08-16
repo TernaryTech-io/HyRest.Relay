@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using HyRest;
-using HyRest.DocumentManagement;
+using HyRest.OnBase.Core;
 
 namespace HyRest.Relay;
 
