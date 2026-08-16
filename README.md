@@ -5,6 +5,9 @@ A simple but robust example of an API server demonstrating the **HyRest Library*
 - **Dependency Injection Integration**: Shows how to use the `HyRest.DependencyInjection` library to configure and manage the HylandApp services
 - **OpenID Connect Authentication**: Demonstrates secure authentication using OpenID Connect with Duende Identity Server, with token management and claim handling
 
+## Logging In & Out
+Once you have your Hyland Identity Server and client configuration ready, run the relay, use `/account/login` to trigger the authentication flow and `/account/logout` to log out.
+
 ## Overview
 
 HyRest.Relay is an example ASP.NET Core Web API that acts as a proxy/relay layer to Hyland's OnBase platform. It uses the HyRest Dependancy Injection library to abstract the complexity of authentication & session managment, and the HyRest library to simplify interactions with Hyland Rest API.
