@@ -1,6 +1,3 @@
 <Solution>
-  <Project Path="../HyRest/src/HyRest.Abstractions/HyRest.Abstractions.csproj" />
-  <Project Path="../HyRest/src/HyRest.DependencyInjection/HyRest.DependencyInjection.csproj" />
-  <Project Path="../HyRest/src/HyRest/HyRest.csproj" />
   <Project Path="HyRest.Relay.csproj" />
 </Solution>

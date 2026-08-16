@@ -23,20 +23,6 @@ public static class AppConfiguration
         app.UseExceptionHandler();
         app.UseHylandAuthentication();
         app.AddEndpoints();
-
-        //var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-
-        //lifetime.ApplicationStopping.Register(async () =>
-        //{
-        //    TokenSource.Cancel();
-        //    var hylandApp = app.Services.GetService<OnBaseApp>();
-        //    if(hylandApp != null)
-        //    {
-        //        if (hylandApp.Session.IsActive)
-        //            await hylandApp.Session.DisconnectAsync();
-        //    }
-
-        //});
         app.Run();
 
         return app;
@@ -91,7 +77,6 @@ public static class AppConfiguration
 
         builder.Services.AddSingleton(TokenSource);
         builder.Services.AddEndpointsApiExplorer();
-        //builder.Services.AddSwaggerGen();
         Console.CancelKeyPress += ConsoleCancelHandeler;
         AppDomain.CurrentDomain.ProcessExit += ProcessExitHandler;
         AppDomain.CurrentDomain.DomainUnload += CurrentDomain_DomainUnload;
