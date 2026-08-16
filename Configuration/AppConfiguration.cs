@@ -61,7 +61,7 @@ public static class AppConfiguration
             //optional, defaults are provided
             clientOptions.UseQueryMetering = hylandAppSettings.GetValue<bool>("UseQueryMetering"); //default is false
             clientOptions.DefaultLanguage = hylandAppSettings.GetValue<string>("DefaultLanguage") ?? string.Empty; ; //defaults to en-US
-            clientOptions.RequestTimeOut = 120;
+            clientOptions.RequestTimeOut = hylandAppSettings.GetValue<int>("RequestTimeOut"); //global timeout for API requests.
         });                  
 
         builder.Logging.AddConsole()

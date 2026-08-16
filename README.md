@@ -26,10 +26,11 @@ Configure the following section with your Hyland environment details:
 ```json
 {
   "HylandApp": {
-    "ApiUri": "https://your-onbase-server/api",
-    "IdSUri": "https://your-ids-server",
-    "UseQueryMetering": false,
-    "DefaultLanguage": "en-US"
+    "IdSUri": "https://onbase.ternarytech.io/auth",
+    "ApiUri": "https://onbase.ternarytech.io/api",
+    "DefaultLanguage": "en-US",
+    "UseQueryMetering": true,
+    "RequestTimeOut" :  180 
   }
 }
 ```
