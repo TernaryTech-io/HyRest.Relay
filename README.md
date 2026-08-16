@@ -30,7 +30,7 @@ Configure the following section with your Hyland environment details:
     "ApiUri": "https://onbase.ternarytech.io/api",
     "DefaultLanguage": "en-US",
     "UseQueryMetering": true,
-    "RequestTimeOut" :  180 
+    "RequestTimeOut" :  180
   }
 }
 ```
