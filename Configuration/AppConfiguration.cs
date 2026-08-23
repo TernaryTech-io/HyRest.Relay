@@ -1,10 +1,8 @@
 ﻿using DotNetEnv;
 using HyRest.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Ternary.Extensions.Logging;
 
 namespace HyRest.Relay;
 
